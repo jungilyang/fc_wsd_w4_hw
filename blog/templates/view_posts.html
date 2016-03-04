@@ -1,0 +1,66 @@
+{% extends 'blog_layout.html' %}
+{% load bootstrap3 %}
+
+{% block page_title %} {{post.pk}} 번째 글 보기 : {{post.title}}{% endblock %}
+
+{% block content %}
+		
+	<div class = 'post_container'>
+		<h3> <a href="/posts/{{post.pk}}/">{{post.title}} </a></h3>
+
+		<div class = 'post_content'>
+			{{post.contents}}
+		</div>
+
+		<div>
+			<p> 글 갈래 : {{post.category.name}}</p>
+			<p> 작성일시 : {{post.created_at}}</p>
+		</div>
+
+		{# <h5> <a href="/">글 삭제 </a></h5> #}
+		<a class="btn btn-default" href="/posts/{{post.pk}}/delete"> 글 삭제 </a>
+		<a class="btn btn-default" href="/"> 리스트 이동  </a>
+
+		<!-- commet 보여주기 -->
+		<hr/>
+		
+		{% for comment in post.comment_set.all %}
+
+		<div class = 'comment_container'>
+			<!-- 몇 번 째 comment인지 계산 어떻게 구현하는지... 실패 --> 
+			<h5> {{comment}}번째 댓글</h5>
+
+			<div class = 'comment_content'>
+				{{comment.content}}
+			</div>
+
+			<div>
+				<p> 작성일시 : {{comment.created_at}}</p>
+			</div>
+
+			<a href ="/posts/{{post.pk}}/delete_comment/{{comment.pk}}"> 삭제 </a>
+
+		</div>
+		{% empty %}
+		<p> 댓글이 전혀 없습니다. </p>
+
+		{% endfor %}
+		
+	</div>
+
+<!-- 댓굴 추가 부분 -->
+	<form method="POST" action="">
+		{% csrf_token %}
+
+		<p>
+		<textarea name="content"></textarea>
+		</p>
+
+		<p>
+		<button type = "submit">댓글 저장</button>
+		</p>
+	</form>
+
+
+
+{% endblock %}
